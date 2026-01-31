@@ -1,0 +1,8 @@
+display_name: Kanchi Note
+package_name: kanchi-note
+maintainer: San <san@example.com>
+description: Danish vocabulary and phrase dictionary application
+priority: optional
+section: education
+essential: false
+icon: assets/app_icon.png

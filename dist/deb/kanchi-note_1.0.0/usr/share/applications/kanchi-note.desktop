@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Kanchi Note
+Comment=Danish vocabulary and phrase dictionary
+Exec=/usr/bin/kanchi-note
+Icon=kanchi-note
+Terminal=false
+Type=Application
+Categories=Education;Languages;
+Keywords=danish;vocabulary;phrases;language;learning;

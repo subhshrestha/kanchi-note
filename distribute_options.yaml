@@ -1,0 +1,12 @@
+variables:
+  PGYER_API_KEY: ''
+
+output: dist/
+
+releases:
+  - name: dev
+    jobs:
+      - name: linux-deb
+        package:
+          platform: linux
+          target: deb

@@ -1,0 +1,10 @@
+Package: kanchi-note
+Version: 1.0.0
+Section: education
+Priority: optional
+Architecture: amd64
+Depends: libgtk-3-0, libkeybinder-3.0-0, libayatana-appindicator3-1, speech-dispatcher
+Maintainer: San <san@example.com>
+Description: Danish vocabulary and phrase dictionary
+ Kanchi Note is a desktop application for learning Danish vocabulary.
+ Features include phrase management, auto-translation, and text-to-speech.
