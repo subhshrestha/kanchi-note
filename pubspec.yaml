@@ -25,9 +25,6 @@ dependencies:
   # Text-to-Speech
   flutter_tts: ^4.0.2
 
-  # Global Hotkey
-  hotkey_manager: ^0.2.0
-
   # System Tray
   system_tray: ^2.0.3
 

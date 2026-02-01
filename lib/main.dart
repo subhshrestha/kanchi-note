@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:system_tray/system_tray.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -60,7 +58,6 @@ class _AppInitializerState extends ConsumerState<AppInitializer>
   @override
   void dispose() {
     windowManager.removeListener(this);
-    hotKeyManager.unregisterAll();
     super.dispose();
   }
 
@@ -70,9 +67,6 @@ class _AppInitializerState extends ConsumerState<AppInitializer>
 
     // Initialize system tray
     await _initSystemTray();
-
-    // Initialize global hotkeys
-    await _initHotkeys();
 
     setState(() {
       _isInitialized = true;
@@ -118,34 +112,6 @@ class _AppInitializerState extends ConsumerState<AppInitializer>
         _systemTray.popUpContextMenu();
       }
     });
-  }
-
-  Future<void> _initHotkeys() async {
-    try {
-      // Register CTRL+SHIFT+N
-      final hotkeyCtrlShiftN = HotKey(
-        key: LogicalKeyboardKey.keyN,
-        modifiers: [HotKeyModifier.control, HotKeyModifier.shift],
-        scope: HotKeyScope.system,
-      );
-
-      await hotKeyManager.register(hotkeyCtrlShiftN, keyDownHandler: (hotKey) {
-        _toggleWindow();
-      });
-
-      // Register SUPER+N (Meta key)
-      final hotkeySuperN = HotKey(
-        key: LogicalKeyboardKey.keyN,
-        modifiers: [HotKeyModifier.meta],
-        scope: HotKeyScope.system,
-      );
-
-      await hotKeyManager.register(hotkeySuperN, keyDownHandler: (hotKey) {
-        _toggleWindow();
-      });
-    } catch (e) {
-      debugPrint('Failed to register hotkeys: $e');
-    }
   }
 
   Future<void> _toggleWindow() async {

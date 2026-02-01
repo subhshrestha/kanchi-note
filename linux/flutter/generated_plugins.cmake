@@ -3,7 +3,6 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  hotkey_manager_linux
   screen_retriever
   sqlite3_flutter_libs
   system_tray
