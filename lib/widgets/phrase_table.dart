@@ -24,12 +24,14 @@ class _PhraseTableState extends ConsumerState<PhraseTable> {
   String? _editingField; // 'phrase', 'meaning', 'myNote'
   final _editController = TextEditingController();
   final _editFocusNode = FocusNode();
+  final _editKeyFocusNode = FocusNode();
   bool _isTranslating = false;
 
   @override
   void dispose() {
     _editController.dispose();
     _editFocusNode.dispose();
+    _editKeyFocusNode.dispose();
     super.dispose();
   }
 
@@ -104,7 +106,11 @@ class _PhraseTableState extends ConsumerState<PhraseTable> {
       myNote: Value(newNote),
     );
 
-    await ref.read(phraseNotifierProvider.notifier).updatePhrase(updatedPhrase);
+    final updated =
+        await ref.read(phraseNotifierProvider.notifier).updatePhrase(updatedPhrase);
+    if (updated) {
+      ref.invalidate(filteredPhrasesProvider);
+    }
     _cancelEdit();
   }
 
@@ -119,7 +125,11 @@ class _PhraseTableState extends ConsumerState<PhraseTable> {
   Future<void> _deletePhrase(Phrase phrase) async {
     final confirmed = await DeleteConfirmDialog.show(context, phrase.phrase);
     if (confirmed == true) {
-      await ref.read(phraseNotifierProvider.notifier).deletePhrase(phrase.id);
+      final deleted =
+          await ref.read(phraseNotifierProvider.notifier).deletePhrase(phrase.id);
+      if (deleted) {
+        ref.invalidate(filteredPhrasesProvider);
+      }
     }
   }
 
@@ -191,6 +201,7 @@ class _PhraseTableState extends ConsumerState<PhraseTable> {
   }) {
     if (isEditing && _editingId == phrase.id && _editingField == field) {
       return Focus(
+        focusNode: _editKeyFocusNode,
         onFocusChange: (hasFocus) {
           if (!hasFocus) {
             _cancelEdit();
