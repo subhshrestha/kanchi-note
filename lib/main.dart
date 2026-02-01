@@ -23,7 +23,7 @@ void main() async {
     backgroundColor: Colors.transparent,
     skipTaskbar: false,
     titleBarStyle: TitleBarStyle.normal,
-    title: 'Kanchi Note',
+    title: "Kanchi's note",
   );
 
   await windowManager.waitUntilReadyToShow(windowOptions, () async {
@@ -91,9 +91,9 @@ class _AppInitializerState extends ConsumerState<AppInitializer>
     }
 
     await _systemTray.initSystemTray(
-      title: 'Kanchi Note',
+      title: "Kanchi's note",
       iconPath: iconPath,
-      toolTip: 'Kanchi Note - Danish Vocabulary',
+      toolTip: "Kanchi's note - Danish Vocabulary",
     );
 
     final menu = Menu();
@@ -185,7 +185,7 @@ class _AppInitializerState extends ConsumerState<AppInitializer>
                 const CircularProgressIndicator(),
                 const SizedBox(height: 16),
                 Text(
-                  'Initializing Kanchi Note...',
+                  "Initializing Kanchi's note...",
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ],

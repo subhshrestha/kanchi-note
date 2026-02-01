@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.kanchinote" "\0"
-            VALUE "FileDescription", "kanchi_note" "\0"
+            VALUE "FileDescription", "Kanchi's note" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "kanchi_note" "\0"
+            VALUE "InternalName", "Kanchi's note" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 com.kanchinote. All rights reserved." "\0"
             VALUE "OriginalFilename", "kanchi_note.exe" "\0"
-            VALUE "ProductName", "kanchi_note" "\0"
+            VALUE "ProductName", "Kanchi's note" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
