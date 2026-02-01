@@ -41,3 +41,28 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved
+**/xcshareddata/swiftpm/
+
+# macOS
+macos/Flutter/ephemeral/
+macos/Pods/
+macos/.symlinks/
+**/Pods/
+*.xcworkspace
+
+# iOS
+ios/Flutter/ephemeral/
+ios/Pods/
+ios/.symlinks/
+
+# Generated files
+*.g.dart
+**/*.g.dart
+
+# Distribution
+dist/

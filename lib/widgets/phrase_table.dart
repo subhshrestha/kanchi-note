@@ -346,24 +346,24 @@ class _PhraseTableState extends ConsumerState<PhraseTable> {
                       child: _buildAudioIcon(phrase),
                     ),
                   ),
-                  // Phrase column
+                  // Phrase column (read-only)
                   Expanded(
                     flex: 25,
                     child: _buildCell(
                       phrase: phrase,
                       field: 'phrase',
                       value: phrase.phrase,
-                      isEditing: true,
+                      isEditing: false,
                     ),
                   ),
-                  // Meaning column
+                  // Meaning column (read-only)
                   Expanded(
                     flex: 40,
                     child: _buildCell(
                       phrase: phrase,
                       field: 'meaning',
                       value: phrase.meaning,
-                      isEditing: true,
+                      isEditing: false,
                     ),
                   ),
                   // My Note column
