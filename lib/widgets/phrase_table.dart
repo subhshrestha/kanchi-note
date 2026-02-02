@@ -225,7 +225,7 @@ class _PhraseTableState extends ConsumerState<PhraseTable> {
           controller: _editController,
           focusNode: _editFocusNode,
           autofocus: true,
-          maxLines: field == 'phrase' ? 1 : 3,
+          maxLines: field == 'phrase' ? 1 : (field == 'myNote' ? 6 : 3),
           decoration: InputDecoration(
             isDense: true,
             contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -315,7 +315,7 @@ class _PhraseTableState extends ConsumerState<PhraseTable> {
                 ),
               ),
               Expanded(
-                flex: 40,
+                flex: 25,
                 child: Padding(
                   padding: EdgeInsets.all(12),
                   child: Text(
@@ -325,7 +325,7 @@ class _PhraseTableState extends ConsumerState<PhraseTable> {
                 ),
               ),
               Expanded(
-                flex: 30,
+                flex: 50,
                 child: Padding(
                   padding: EdgeInsets.all(12),
                   child: Text(
@@ -369,7 +369,7 @@ class _PhraseTableState extends ConsumerState<PhraseTable> {
                   ),
                   // Meaning column (read-only)
                   Expanded(
-                    flex: 40,
+                    flex: 25,
                     child: _buildCell(
                       phrase: phrase,
                       field: 'meaning',
@@ -379,7 +379,7 @@ class _PhraseTableState extends ConsumerState<PhraseTable> {
                   ),
                   // My Note column
                   Expanded(
-                    flex: 30,
+                    flex: 50,
                     child: _buildCell(
                       phrase: phrase,
                       field: 'myNote',
