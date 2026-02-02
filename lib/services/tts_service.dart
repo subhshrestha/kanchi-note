@@ -55,7 +55,7 @@ class TtsService {
       // Set Danish language
       await _flutterTts.setLanguage('da-DK');
       // Slower speech rate for learning
-      await _flutterTts.setSpeechRate(0.5);
+      await _flutterTts.setSpeechRate(0.3);
       await _flutterTts.setVolume(1.0);
       await _flutterTts.setPitch(1.0);
 
@@ -147,7 +147,7 @@ class TtsService {
       // Use spd-say with Danish language and wait for completion
       _linuxProcess = await Process.start(
         'spd-say',
-        ['-l', 'da', '-w', phrase],
+        ['-l', 'da', '-r', '-30', '-w', phrase],
       );
 
       // Wait for the process to complete
