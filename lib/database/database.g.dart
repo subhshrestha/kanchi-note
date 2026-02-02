@@ -688,18 +688,294 @@ class TranslationCacheCompanion extends UpdateCompanion<TranslationCacheData> {
   }
 }
 
+class $DefinitionCacheTable extends DefinitionCache
+    with TableInfo<$DefinitionCacheTable, DefinitionCacheData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DefinitionCacheTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _danishPhraseMeta =
+      const VerificationMeta('danishPhrase');
+  @override
+  late final GeneratedColumn<String> danishPhrase = GeneratedColumn<String>(
+      'danish_phrase', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _definitionMeta =
+      const VerificationMeta('definition');
+  @override
+  late final GeneratedColumn<String> definition = GeneratedColumn<String>(
+      'definition', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, danishPhrase, definition, createdAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'definition_cache';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<DefinitionCacheData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('danish_phrase')) {
+      context.handle(
+          _danishPhraseMeta,
+          danishPhrase.isAcceptableOrUnknown(
+              data['danish_phrase']!, _danishPhraseMeta));
+    } else if (isInserting) {
+      context.missing(_danishPhraseMeta);
+    }
+    if (data.containsKey('definition')) {
+      context.handle(
+          _definitionMeta,
+          definition.isAcceptableOrUnknown(
+              data['definition']!, _definitionMeta));
+    } else if (isInserting) {
+      context.missing(_definitionMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+        {danishPhrase},
+      ];
+  @override
+  DefinitionCacheData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DefinitionCacheData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      danishPhrase: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}danish_phrase'])!,
+      definition: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}definition'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+    );
+  }
+
+  @override
+  $DefinitionCacheTable createAlias(String alias) {
+    return $DefinitionCacheTable(attachedDatabase, alias);
+  }
+}
+
+class DefinitionCacheData extends DataClass
+    implements Insertable<DefinitionCacheData> {
+  final int id;
+  final String danishPhrase;
+  final String definition;
+  final DateTime createdAt;
+  const DefinitionCacheData(
+      {required this.id,
+      required this.danishPhrase,
+      required this.definition,
+      required this.createdAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['danish_phrase'] = Variable<String>(danishPhrase);
+    map['definition'] = Variable<String>(definition);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  DefinitionCacheCompanion toCompanion(bool nullToAbsent) {
+    return DefinitionCacheCompanion(
+      id: Value(id),
+      danishPhrase: Value(danishPhrase),
+      definition: Value(definition),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory DefinitionCacheData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DefinitionCacheData(
+      id: serializer.fromJson<int>(json['id']),
+      danishPhrase: serializer.fromJson<String>(json['danishPhrase']),
+      definition: serializer.fromJson<String>(json['definition']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'danishPhrase': serializer.toJson<String>(danishPhrase),
+      'definition': serializer.toJson<String>(definition),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  DefinitionCacheData copyWith(
+          {int? id,
+          String? danishPhrase,
+          String? definition,
+          DateTime? createdAt}) =>
+      DefinitionCacheData(
+        id: id ?? this.id,
+        danishPhrase: danishPhrase ?? this.danishPhrase,
+        definition: definition ?? this.definition,
+        createdAt: createdAt ?? this.createdAt,
+      );
+  DefinitionCacheData copyWithCompanion(DefinitionCacheCompanion data) {
+    return DefinitionCacheData(
+      id: data.id.present ? data.id.value : this.id,
+      danishPhrase: data.danishPhrase.present
+          ? data.danishPhrase.value
+          : this.danishPhrase,
+      definition:
+          data.definition.present ? data.definition.value : this.definition,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DefinitionCacheData(')
+          ..write('id: $id, ')
+          ..write('danishPhrase: $danishPhrase, ')
+          ..write('definition: $definition, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, danishPhrase, definition, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DefinitionCacheData &&
+          other.id == this.id &&
+          other.danishPhrase == this.danishPhrase &&
+          other.definition == this.definition &&
+          other.createdAt == this.createdAt);
+}
+
+class DefinitionCacheCompanion extends UpdateCompanion<DefinitionCacheData> {
+  final Value<int> id;
+  final Value<String> danishPhrase;
+  final Value<String> definition;
+  final Value<DateTime> createdAt;
+  const DefinitionCacheCompanion({
+    this.id = const Value.absent(),
+    this.danishPhrase = const Value.absent(),
+    this.definition = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  DefinitionCacheCompanion.insert({
+    this.id = const Value.absent(),
+    required String danishPhrase,
+    required String definition,
+    this.createdAt = const Value.absent(),
+  })  : danishPhrase = Value(danishPhrase),
+        definition = Value(definition);
+  static Insertable<DefinitionCacheData> custom({
+    Expression<int>? id,
+    Expression<String>? danishPhrase,
+    Expression<String>? definition,
+    Expression<DateTime>? createdAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (danishPhrase != null) 'danish_phrase': danishPhrase,
+      if (definition != null) 'definition': definition,
+      if (createdAt != null) 'created_at': createdAt,
+    });
+  }
+
+  DefinitionCacheCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? danishPhrase,
+      Value<String>? definition,
+      Value<DateTime>? createdAt}) {
+    return DefinitionCacheCompanion(
+      id: id ?? this.id,
+      danishPhrase: danishPhrase ?? this.danishPhrase,
+      definition: definition ?? this.definition,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (danishPhrase.present) {
+      map['danish_phrase'] = Variable<String>(danishPhrase.value);
+    }
+    if (definition.present) {
+      map['definition'] = Variable<String>(definition.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DefinitionCacheCompanion(')
+          ..write('id: $id, ')
+          ..write('danishPhrase: $danishPhrase, ')
+          ..write('definition: $definition, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $PhrasesTable phrases = $PhrasesTable(this);
   late final $TranslationCacheTable translationCache =
       $TranslationCacheTable(this);
+  late final $DefinitionCacheTable definitionCache =
+      $DefinitionCacheTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [phrases, translationCache];
+      [phrases, translationCache, definitionCache];
 }
 
 typedef $$PhrasesTableCreateCompanionBuilder = PhrasesCompanion Function({
@@ -1063,6 +1339,160 @@ typedef $$TranslationCacheTableProcessedTableManager = ProcessedTableManager<
     ),
     TranslationCacheData,
     PrefetchHooks Function()>;
+typedef $$DefinitionCacheTableCreateCompanionBuilder = DefinitionCacheCompanion
+    Function({
+  Value<int> id,
+  required String danishPhrase,
+  required String definition,
+  Value<DateTime> createdAt,
+});
+typedef $$DefinitionCacheTableUpdateCompanionBuilder = DefinitionCacheCompanion
+    Function({
+  Value<int> id,
+  Value<String> danishPhrase,
+  Value<String> definition,
+  Value<DateTime> createdAt,
+});
+
+class $$DefinitionCacheTableFilterComposer
+    extends Composer<_$AppDatabase, $DefinitionCacheTable> {
+  $$DefinitionCacheTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get danishPhrase => $composableBuilder(
+      column: $table.danishPhrase, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get definition => $composableBuilder(
+      column: $table.definition, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+}
+
+class $$DefinitionCacheTableOrderingComposer
+    extends Composer<_$AppDatabase, $DefinitionCacheTable> {
+  $$DefinitionCacheTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get danishPhrase => $composableBuilder(
+      column: $table.danishPhrase,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get definition => $composableBuilder(
+      column: $table.definition, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+}
+
+class $$DefinitionCacheTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DefinitionCacheTable> {
+  $$DefinitionCacheTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get danishPhrase => $composableBuilder(
+      column: $table.danishPhrase, builder: (column) => column);
+
+  GeneratedColumn<String> get definition => $composableBuilder(
+      column: $table.definition, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$DefinitionCacheTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $DefinitionCacheTable,
+    DefinitionCacheData,
+    $$DefinitionCacheTableFilterComposer,
+    $$DefinitionCacheTableOrderingComposer,
+    $$DefinitionCacheTableAnnotationComposer,
+    $$DefinitionCacheTableCreateCompanionBuilder,
+    $$DefinitionCacheTableUpdateCompanionBuilder,
+    (
+      DefinitionCacheData,
+      BaseReferences<_$AppDatabase, $DefinitionCacheTable, DefinitionCacheData>
+    ),
+    DefinitionCacheData,
+    PrefetchHooks Function()> {
+  $$DefinitionCacheTableTableManager(
+      _$AppDatabase db, $DefinitionCacheTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DefinitionCacheTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$DefinitionCacheTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$DefinitionCacheTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> danishPhrase = const Value.absent(),
+            Value<String> definition = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+          }) =>
+              DefinitionCacheCompanion(
+            id: id,
+            danishPhrase: danishPhrase,
+            definition: definition,
+            createdAt: createdAt,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String danishPhrase,
+            required String definition,
+            Value<DateTime> createdAt = const Value.absent(),
+          }) =>
+              DefinitionCacheCompanion.insert(
+            id: id,
+            danishPhrase: danishPhrase,
+            definition: definition,
+            createdAt: createdAt,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$DefinitionCacheTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $DefinitionCacheTable,
+    DefinitionCacheData,
+    $$DefinitionCacheTableFilterComposer,
+    $$DefinitionCacheTableOrderingComposer,
+    $$DefinitionCacheTableAnnotationComposer,
+    $$DefinitionCacheTableCreateCompanionBuilder,
+    $$DefinitionCacheTableUpdateCompanionBuilder,
+    (
+      DefinitionCacheData,
+      BaseReferences<_$AppDatabase, $DefinitionCacheTable, DefinitionCacheData>
+    ),
+    DefinitionCacheData,
+    PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -1071,4 +1501,6 @@ class $AppDatabaseManager {
       $$PhrasesTableTableManager(_db, _db.phrases);
   $$TranslationCacheTableTableManager get translationCache =>
       $$TranslationCacheTableTableManager(_db, _db.translationCache);
+  $$DefinitionCacheTableTableManager get definitionCache =>
+      $$DefinitionCacheTableTableManager(_db, _db.definitionCache);
 }

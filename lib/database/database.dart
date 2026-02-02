@@ -30,12 +30,24 @@ class TranslationCache extends Table {
       ];
 }
 
-@DriftDatabase(tables: [Phrases, TranslationCache])
+class DefinitionCache extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get danishPhrase => text()();
+  TextColumn get definition => text()();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+        {danishPhrase}
+      ];
+}
+
+@DriftDatabase(tables: [Phrases, TranslationCache, DefinitionCache])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration {
@@ -46,6 +58,9 @@ class AppDatabase extends _$AppDatabase {
       onUpgrade: (Migrator m, int from, int to) async {
         if (from < 2) {
           await m.createTable(translationCache);
+        }
+        if (from < 3) {
+          await m.createTable(definitionCache);
         }
       },
     );
@@ -160,6 +175,26 @@ class AppDatabase extends _$AppDatabase {
         translatedText: translatedText,
         sourceLang: Value(sourceLang),
         targetLang: Value(targetLang),
+      ),
+    );
+  }
+
+  // Definition Cache methods
+
+  // Get cached definition
+  Future<String?> getCachedDefinition(String danishPhrase) async {
+    final result = await (select(definitionCache)
+          ..where((t) => t.danishPhrase.lower().equals(danishPhrase.toLowerCase())))
+        .getSingleOrNull();
+    return result?.definition;
+  }
+
+  // Save definition to cache
+  Future<void> cacheDefinition(String danishPhrase, String definition) async {
+    await into(definitionCache).insertOnConflictUpdate(
+      DefinitionCacheCompanion.insert(
+        danishPhrase: danishPhrase.toLowerCase(),
+        definition: definition,
       ),
     );
   }

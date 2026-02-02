@@ -7,6 +7,7 @@ import 'package:window_manager/window_manager.dart';
 
 import 'app.dart';
 import 'providers/tts_provider.dart';
+import 'providers/gemini_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -64,6 +65,17 @@ class _AppInitializerState extends ConsumerState<AppInitializer>
   Future<void> _initializeApp() async {
     // Initialize TTS
     await ref.read(ttsServiceProvider).init();
+
+    // Initialize Gemini with API key
+    // Option 1: Set your API key directly here (for testing)
+    const geminiApiKey = 'AIzaSyB6K9wty0mWAvv4zqWPzu0L6TSB_NdvDI0'; // <-- Paste your Gemini API key here
+    // Option 2: Or use environment variable: GEMINI_API_KEY=xxx flutter run
+    final apiKey = geminiApiKey.isNotEmpty
+        ? geminiApiKey
+        : Platform.environment['GEMINI_API_KEY'];
+    if (apiKey != null && apiKey.isNotEmpty) {
+      ref.read(geminiServiceProvider).setApiKey(apiKey);
+    }
 
     // Initialize system tray
     await _initSystemTray();

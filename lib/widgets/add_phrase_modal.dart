@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/phrase_provider.dart';
 import '../providers/translation_provider.dart';
+import '../providers/gemini_provider.dart';
 import 'duplicate_warning_dialog.dart';
 
 class AddPhraseModal extends ConsumerStatefulWidget {
@@ -27,7 +28,9 @@ class _AddPhraseModalState extends ConsumerState<AddPhraseModal> {
   final _phraseFocusNode = FocusNode();
   bool _isSubmitting = false;
   bool _meaningWasAutoFilled = false;
+  bool _noteWasAutoFilled = false;
   String? _lastTranslatedPhrase;
+  String? _lastDefinitionPhrase;
 
   @override
   void initState() {
@@ -46,9 +49,10 @@ class _AddPhraseModalState extends ConsumerState<AddPhraseModal> {
   }
 
   void _onPhraseFocusChange() {
-    // Translate when phrase field loses focus
+    // Translate and get definition when phrase field loses focus
     if (!_phraseFocusNode.hasFocus) {
       _translatePhrase();
+      _getDefinition();
     }
   }
 
@@ -63,6 +67,21 @@ class _AddPhraseModalState extends ConsumerState<AddPhraseModal> {
     } else if (phrase.isEmpty) {
       ref.read(translationNotifierProvider.notifier).clear();
       _lastTranslatedPhrase = null;
+    }
+  }
+
+  void _getDefinition() {
+    final phrase = _phraseController.text.trim();
+    final geminiNotifier = ref.read(geminiNotifierProvider.notifier);
+
+    // Only get definition if phrase changed, is not empty, and API key is set
+    if (phrase.isNotEmpty && phrase != _lastDefinitionPhrase && geminiNotifier.hasApiKey) {
+      _lastDefinitionPhrase = phrase;
+      _noteWasAutoFilled = false; // Reset so new definition can auto-fill
+      geminiNotifier.getDefinitionWithDebounce(phrase);
+    } else if (phrase.isEmpty) {
+      geminiNotifier.clear();
+      _lastDefinitionPhrase = null;
     }
   }
 
@@ -103,6 +122,7 @@ class _AddPhraseModalState extends ConsumerState<AddPhraseModal> {
   @override
   Widget build(BuildContext context) {
     final translationState = ref.watch(translationNotifierProvider);
+    final geminiState = ref.watch(geminiNotifierProvider);
 
     // Auto-fill meaning when translation completes (update even if field has value)
     if (translationState.translation != null && !_meaningWasAutoFilled) {
@@ -120,6 +140,16 @@ class _AddPhraseModalState extends ConsumerState<AddPhraseModal> {
         if (mounted) {
           _meaningController.clear();
           _meaningWasAutoFilled = true; // Prevent repeated clearing
+        }
+      });
+    }
+
+    // Auto-fill note when definition completes
+    if (geminiState.definition != null && !_noteWasAutoFilled) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _noteController.text = geminiState.definition!;
+          _noteWasAutoFilled = true;
         }
       });
     }
@@ -231,13 +261,51 @@ class _AddPhraseModalState extends ConsumerState<AddPhraseModal> {
               // My Note field
               TextFormField(
                 controller: _noteController,
-                decoration: const InputDecoration(
+                enabled: !geminiState.isLoading,
+                decoration: InputDecoration(
                   labelText: 'My Note (optional)',
-                  border: OutlineInputBorder(),
-                  hintText: 'Add personal notes or mnemonics...',
+                  border: const OutlineInputBorder(),
+                  hintText: geminiState.isLoading ? 'Getting definition...' : 'Add personal notes or mnemonics...',
+                  suffixIcon: geminiState.isLoading
+                      ? const Padding(
+                          padding: EdgeInsets.all(12),
+                          child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                        )
+                      : null,
                 ),
                 maxLines: 3,
+                onChanged: (_) {
+                  // User edited note, mark as not auto-filled
+                  _noteWasAutoFilled = false;
+                },
               ),
+              if (geminiState.error != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.warning_amber_rounded,
+                        size: 16,
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          geminiState.error!,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               const SizedBox(height: 24),
 
               // Buttons
