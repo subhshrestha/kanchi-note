@@ -93,10 +93,6 @@ Explain the Danish phrase "$danishPhrase" in simple English (2-3 sentences max).
           final content = candidates[0]['content'];
           final parts = content['parts'] as List?;
           if (parts != null && parts.isNotEmpty) {
-            // Debug: log each part
-            for (int i = 0; i < parts.length; i++) {
-              print('Part $i: ${parts[i]}');
-            }
             final definition = parts
                 .map((p) => p['text'] as String?)
                 .where((t) => t != null)
