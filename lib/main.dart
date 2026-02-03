@@ -68,7 +68,7 @@ class _AppInitializerState extends ConsumerState<AppInitializer>
 
     // Initialize Gemini with API key
     // Option 1: Set your API key directly here (for testing)
-    const geminiApiKey = 'AIzaSyB6K9wty0mWAvv4zqWPzu0L6TSB_NdvDI0'; // <-- Paste your Gemini API key here
+    const geminiApiKey = ''; // <-- Paste your Gemini API key here
     // Option 2: Or use environment variable: GEMINI_API_KEY=xxx flutter run
     final apiKey = geminiApiKey.isNotEmpty
         ? geminiApiKey
