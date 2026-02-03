@@ -101,20 +101,21 @@ Toggle Behavior:
 ║░░░░░░░░░░░░║  │ hvad hedder du?                                             │  ║░░░░░░░░░░░░░░░░░║
 ║░░░░░░░░░░░░║  └─────────────────────────────────────────────────────────────┘  ║░░░░░░░░░░░░░░░░░║
 ║░░░░░░░░░░░░║                                                                   ║░░░░░░░░░░░░░░░░░║
-║░░░░░░░░░░░░║  Meaning (English) *                                        ⟳    ║░░░░░░░░░░░░░░░░░║
+║░░░░░░░░░░░░║  Meaning (English) *                                        ✨    ║░░░░░░░░░░░░░░░░░║
 ║░░░░░░░░░░░░║  ┌─────────────────────────────────────────────────────────────┐  ║░░░░░░░░░░░░░░░░░║
 ║░░░░░░░░░░░░║  │ what is your name, what are you called, a common way to    │  ║░░░░░░░░░░░░░░░░░║
 ║░░░░░░░░░░░░║  │ ask someone's name in Danish conversation                  │  ║░░░░░░░░░░░░░░░░░║
 ║░░░░░░░░░░░░║  │                                                            │  ║░░░░░░░░░░░░░░░░░║
 ║░░░░░░░░░░░░║  └─────────────────────────────────────────────────────────────┘  ║░░░░░░░░░░░░░░░░░║
-║░░░░░░░░░░░░║  ✓ Auto-translated • Click to edit                                ║░░░░░░░░░░░░░░░░░║
+║░░░░░░░░░░░░║  ✨ = Click to auto-translate from phrase                         ║░░░░░░░░░░░░░░░░░║
 ║░░░░░░░░░░░░║                                                                   ║░░░░░░░░░░░░░░░░░║
-║░░░░░░░░░░░░║  My Note (optional)                                               ║░░░░░░░░░░░░░░░░░║
+║░░░░░░░░░░░░║  My Note (optional)                                          ✨    ║░░░░░░░░░░░░░░░░░║
 ║░░░░░░░░░░░░║  ┌─────────────────────────────────────────────────────────────┐  ║░░░░░░░░░░░░░░░░░║
 ║░░░░░░░░░░░░║  │ Use this when meeting someone for the first time. Can      │  ║░░░░░░░░░░░░░░░░░║
 ║░░░░░░░░░░░░║  │ also say "mit navn er..." (my name is) in response.        │  ║░░░░░░░░░░░░░░░░░║
 ║░░░░░░░░░░░░║  │                                                            │  ║░░░░░░░░░░░░░░░░░║
 ║░░░░░░░░░░░░║  └─────────────────────────────────────────────────────────────┘  ║░░░░░░░░░░░░░░░░░║
+║░░░░░░░░░░░░║  ✨ = Click to auto-generate note via AI                          ║░░░░░░░░░░░░░░░░░║
 ║░░░░░░░░░░░░║                                                                   ║░░░░░░░░░░░░░░░░░║
 ║░░░░░░░░░░░░║              ┌──────────┐              ┌──────────┐               ║░░░░░░░░░░░░░░░░░║
 ║░░░░░░░░░░░░║              │  Cancel  │              │  Submit  │               ║░░░░░░░░░░░░░░░░░║
@@ -127,7 +128,9 @@ Toggle Behavior:
 Form Field Specs:
 - Phrase: Single-line text input (Danish phrases are typically short)
 - Meaning: Multi-line textarea, 3 rows, ~60 chars wide
+  - ✨ button triggers auto-translation from phrase (manual click required)
 - My Note: Multi-line textarea, 3 rows, ~60 chars wide
+  - ✨ button triggers AI-generated definition (manual click required)
 ```
 
 ---
@@ -207,7 +210,7 @@ Windows/Linux Taskbar:
                   ↑
             Right-click menu:
            ┌─────────────────┐
-           │ Open            │  ← or press CTRL+SHIFT+N
+           │ Open            │
            │ ─────────────── │
            │ Quit            │
            └─────────────────┘

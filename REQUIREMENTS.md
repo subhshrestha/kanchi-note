@@ -12,10 +12,7 @@ A cross-platform **Danish vocabulary/phrase dictionary** application that helps 
 
 | ID | Requirement | Priority |
 |----|-------------|----------|
-| FR-001 | App activates via global hotkey `CTRL+SHIFT+N` | Must |
-| FR-002 | App activates via global hotkey `SUPER+N` (alternative) | Must |
 | FR-003 | App runs in system tray when not active | Should |
-| FR-004 | Hotkey works even when app is not focused | Must |
 
 ### 1.2 Main View (Table)
 
@@ -66,7 +63,7 @@ A cross-platform **Danish vocabulary/phrase dictionary** application that helps 
 | FR-045 | `phrase` field is **required** | Must |
 | FR-046 | `meaning` field is **required** | Must |
 | FR-047 | `my_note` field is **optional** | Must |
-| FR-048 | When user enters `phrase`, auto-fetch English `meaning` via translation API | Must |
+| FR-048 | User can click ✨ button to fetch English `meaning` via translation API | Must |
 | FR-049 | User can manually override the auto-translated `meaning` | Should |
 | FR-050 | Show loading indicator while fetching translation | Should |
 | FR-051 | Show validation errors if required fields are empty | Must |
@@ -85,7 +82,7 @@ A cross-platform **Danish vocabulary/phrase dictionary** application that helps 
 
 | ID | Requirement | Priority |
 |----|-------------|----------|
-| FR-070 | Call translation API when user finishes typing `phrase` | Must |
+| FR-070 | Call translation API when user clicks the auto-translate button | Must |
 | FR-071 | Debounce API calls (wait 500ms after user stops typing) | Should |
 | FR-072 | Handle API errors gracefully with user feedback | Must |
 | FR-073 | Allow manual entry if API is unavailable | Must |
@@ -102,13 +99,12 @@ A cross-platform **Danish vocabulary/phrase dictionary** application that helps 
 | NFR-002 | Application runs on macOS 11+ | Must |
 | NFR-003 | Application runs on Linux (Ubuntu 20.04+) | Must |
 | NFR-004 | Consistent UI/UX across all platforms | Should |
-| NFR-005 | Global hotkey works on all platforms | Must |
 
 ### 2.2 Performance
 
 | ID | Requirement | Priority |
 |----|-------------|----------|
-| NFR-010 | App activates in under 1 second when hotkey pressed | Must |
+| NFR-010 | App launches in under 2 seconds | Should |
 | NFR-011 | Table renders 1000+ phrases smoothly | Should |
 | NFR-012 | Search filtering responds in under 100ms | Should |
 | NFR-013 | Translation API response within 2 seconds | Should |
@@ -144,7 +140,6 @@ A cross-platform **Danish vocabulary/phrase dictionary** application that helps 
 | Translation API | MyMemory API (`https://api.mymemory.translated.net`) |
 | Text-to-Speech | `flutter_tts` package (uses device's built-in TTS engine) |
 | State Management | Riverpod |
-| Global Hotkey | `hotkey_manager` package |
 | System Tray | `system_tray` package |
 | Window Size | 900x600 (default) |
 
@@ -359,16 +354,17 @@ class TtsService {
 │  │ tak for mad                         │  │
 │  └─────────────────────────────────────┘  │
 │                                           │
-│  Meaning (English) *                      │
+│  Meaning (English) *                  ✨  │
 │  ┌─────────────────────────────────────┐  │
-│  │ thanks for the food        🔄       │  │
+│  │ thanks for the food                 │  │
 │  └─────────────────────────────────────┘  │
-│  ↑ Auto-translated (editable)             │
+│  ✨ = Click to auto-translate             │
 │                                           │
-│  My Note (optional)                       │
+│  My Note (optional)                   ✨  │
 │  ┌─────────────────────────────────────┐  │
 │  │ said after meals to the cook        │  │
 │  └─────────────────────────────────────┘  │
+│  ✨ = Click to auto-generate via AI       │
 │                                           │
 │         [Cancel]            [Submit]      │
 │                                           │
@@ -380,12 +376,11 @@ class TtsService {
 ## 5. User Stories
 
 ### Epic: Quick Access
-- **US-001**: As a user, I want to press `CTRL+SHIFT+N` to instantly open the app so I can quickly look up or add phrases.
 - **US-002**: As a user, I want the app to run in the background so it's always ready when I need it.
 
 ### Epic: Phrase Management
 - **US-010**: As a Danish learner, I want to add new Danish phrases with their English meanings so I can build my vocabulary.
-- **US-011**: As a user, I want the English meaning auto-filled when I type a Danish phrase so I don't have to translate manually.
+- **US-011**: As a user, I want to click a button to auto-fill the English meaning so I can get translations on demand.
 - **US-012**: As a user, I want to add personal notes to phrases so I can remember them better with my own mnemonics.
 - **US-013**: As a user, I want to edit phrases inline (click to edit in table) so I can quickly correct mistakes.
 - **US-014**: As a user, when I edit a phrase, the meaning should auto-update so it stays in sync.
@@ -404,7 +399,7 @@ class TtsService {
 │ App in System   │
 │ Tray (idle)     │
 └────────┬────────┘
-         │ User presses CTRL+SHIFT+N or SUPER+N
+         │ User clicks tray icon or launches app
          ▼
 ┌─────────────────┐
 │ Main Window     │◄──────────────────────────────┐
@@ -427,16 +422,20 @@ class TtsService {
     │ │Type    │ │Cancel  │───────────────────────┤
     │ │Phrase  │ └────────┘                       │
     │ └───┬────┘                                  │
-    │     │ (debounced)                           │
     │     ▼                                       │
+    │ ┌────────────────┐                          │
+    │ │Click ✨ button │                          │
+    │ │to translate    │                          │
+    │ └───────┬────────┘                          │
+    │         ▼                                   │
     │ ┌────────────────┐                          │
     │ │API translates  │                          │
     │ │→ fills meaning │                          │
     │ └───────┬────────┘                          │
     │         ▼                                   │
     │ ┌────────────────┐                          │
-    │ │User optionally │                          │
-    │ │adds my_note    │                          │
+    │ │Optionally click│                          │
+    │ │✨ for AI note  │                          │
     │ └───────┬────────┘                          │
     │         ▼                                   │
     │ ┌────────────────┐                          │
@@ -470,7 +469,6 @@ class TtsService {
 ### Constraints
 - Data stored locally only (SQLite)
 - Requires internet connection for translation API calls
-- Global hotkeys may conflict with other apps (provide configuration option)
 
 ### Assumptions
 - User has internet access for translation (manual entry fallback available)
@@ -492,15 +490,14 @@ class TtsService {
 
 ## 9. Acceptance Criteria for MVP
 
-1. ✅ Global hotkey (`CTRL+SHIFT+N` / `SUPER+N`) opens the app
-2. ✅ Table displays phrases with 3 columns: phrase, meaning, my_note
-3. ✅ Table is sorted alphabetically by phrase
-4. ✅ Search filters the table across all columns
-5. ✅ Add button opens modal form
-6. ✅ Modal validates required fields (phrase, meaning)
-7. ✅ Typing a Danish phrase auto-fetches English translation
-8. ✅ Data persists in local SQLite database
-9. ✅ App runs on Windows, macOS, and Linux
-10. ✅ Audio icon plays Danish pronunciation via TTS
-11. ✅ Duplicate phrases are prevented with warning message
-12. ✅ Delete shows confirmation dialog
+1. ✅ Table displays phrases with 3 columns: phrase, meaning, my_note
+2. ✅ Table is sorted alphabetically by phrase
+3. ✅ Search filters the table across all columns
+4. ✅ Add button opens modal form
+5. ✅ Modal validates required fields (phrase, meaning)
+6. ✅ Clicking ✨ button fetches English translation for the phrase
+7. ✅ Data persists in local SQLite database
+8. ✅ App runs on Windows, macOS, and Linux
+9. ✅ Audio icon plays Danish pronunciation via TTS
+10. ✅ Duplicate phrases are prevented with warning message
+11. ✅ Delete shows confirmation dialog
