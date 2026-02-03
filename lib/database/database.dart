@@ -18,7 +18,7 @@ class Phrases extends Table {
 
 class TranslationCache extends Table {
   IntColumn get id => integer().autoIncrement()();
-  TextColumn get sourceText => text()();
+  TextColumn get sourceText => text().collate(Collate.noCase)();
   TextColumn get translatedText => text()();
   TextColumn get sourceLang => text().withDefault(const Constant('da'))();
   TextColumn get targetLang => text().withDefault(const Constant('en'))();
@@ -32,7 +32,7 @@ class TranslationCache extends Table {
 
 class DefinitionCache extends Table {
   IntColumn get id => integer().autoIncrement()();
-  TextColumn get danishPhrase => text()();
+  TextColumn get danishPhrase => text().collate(Collate.noCase)();
   TextColumn get definition => text()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 
@@ -47,7 +47,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration {
@@ -60,6 +60,13 @@ class AppDatabase extends _$AppDatabase {
           await m.createTable(translationCache);
         }
         if (from < 3) {
+          await m.createTable(definitionCache);
+        }
+        if (from < 4) {
+          // Recreate cache tables with COLLATE NOCASE
+          await m.deleteTable('translation_cache');
+          await m.deleteTable('definition_cache');
+          await m.createTable(translationCache);
           await m.createTable(definitionCache);
         }
       },
