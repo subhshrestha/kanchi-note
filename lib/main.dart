@@ -67,12 +67,8 @@ class _AppInitializerState extends ConsumerState<AppInitializer>
     await ref.read(ttsServiceProvider).init();
 
     // Initialize Gemini with API key
-    // Option 1: Set your API key directly here (for testing)
-    const geminiApiKey = ''; // <-- Paste your Gemini API key here
-    // Option 2: Or use environment variable: GEMINI_API_KEY=xxx flutter run
-    final apiKey = geminiApiKey.isNotEmpty
-        ? geminiApiKey
-        : Platform.environment['GEMINI_API_KEY'];
+    // Use environment variable: GEMINI_API_KEY=xxx flutter run
+    final apiKey = Platform.environment['GEMINI_API_KEY'];
     if (apiKey != null && apiKey.isNotEmpty) {
       ref.read(geminiServiceProvider).setApiKey(apiKey);
     }
