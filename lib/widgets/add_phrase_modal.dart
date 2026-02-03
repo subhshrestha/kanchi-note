@@ -29,18 +29,14 @@ class _AddPhraseModalState extends ConsumerState<AddPhraseModal> {
   bool _isSubmitting = false;
   bool _meaningWasAutoFilled = false;
   bool _noteWasAutoFilled = false;
-  String? _lastTranslatedPhrase;
-  String? _lastDefinitionPhrase;
 
   @override
   void initState() {
     super.initState();
-    _phraseFocusNode.addListener(_onPhraseFocusChange);
   }
 
   @override
   void dispose() {
-    _phraseFocusNode.removeListener(_onPhraseFocusChange);
     _phraseFocusNode.dispose();
     _phraseController.dispose();
     _meaningController.dispose();
@@ -48,41 +44,27 @@ class _AddPhraseModalState extends ConsumerState<AddPhraseModal> {
     super.dispose();
   }
 
-  void _onPhraseFocusChange() {
-    // Translate and get definition when phrase field loses focus
-    if (!_phraseFocusNode.hasFocus) {
-      _translatePhrase();
-      _getDefinition();
-    }
-  }
-
   void _translatePhrase() {
     final phrase = _phraseController.text.trim();
 
-    // Only translate if phrase changed and is not empty
-    if (phrase.isNotEmpty && phrase != _lastTranslatedPhrase) {
-      _lastTranslatedPhrase = phrase;
-      _meaningWasAutoFilled = false; // Reset so new translation can auto-fill
-      ref.read(translationNotifierProvider.notifier).translateWithDebounce(phrase);
-    } else if (phrase.isEmpty) {
-      ref.read(translationNotifierProvider.notifier).clear();
-      _lastTranslatedPhrase = null;
+    if (phrase.isEmpty) {
+      return;
     }
+
+    _meaningWasAutoFilled = false;
+    ref.read(translationNotifierProvider.notifier).translateWithDebounce(phrase);
   }
 
   void _getDefinition() {
     final phrase = _phraseController.text.trim();
     final geminiNotifier = ref.read(geminiNotifierProvider.notifier);
 
-    // Only get definition if phrase changed, is not empty, and API key is set
-    if (phrase.isNotEmpty && phrase != _lastDefinitionPhrase && geminiNotifier.hasApiKey) {
-      _lastDefinitionPhrase = phrase;
-      _noteWasAutoFilled = false; // Reset so new definition can auto-fill
-      geminiNotifier.getDefinitionWithDebounce(phrase);
-    } else if (phrase.isEmpty) {
-      geminiNotifier.clear();
-      _lastDefinitionPhrase = null;
+    if (phrase.isEmpty || !geminiNotifier.hasApiKey) {
+      return;
     }
+
+    _noteWasAutoFilled = false;
+    geminiNotifier.getDefinitionWithDebounce(phrase);
   }
 
   Future<void> _submit() async {
@@ -130,16 +112,6 @@ class _AddPhraseModalState extends ConsumerState<AddPhraseModal> {
         if (mounted) {
           _meaningController.text = translationState.translation!;
           _meaningWasAutoFilled = true;
-        }
-      });
-    }
-
-    // Clear meaning field when translation fails (old meaning doesn't match new phrase)
-    if (translationState.error != null && !_meaningWasAutoFilled) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          _meaningController.clear();
-          _meaningWasAutoFilled = true; // Prevent repeated clearing
         }
       });
     }
@@ -219,7 +191,11 @@ class _AddPhraseModalState extends ConsumerState<AddPhraseModal> {
                             child: CircularProgressIndicator(strokeWidth: 2),
                           ),
                         )
-                      : null,
+                      : IconButton(
+                          icon: const Icon(Icons.auto_awesome, size: 20),
+                          tooltip: 'Auto-translate',
+                          onPressed: _translatePhrase,
+                        ),
                 ),
                 maxLines: 3,
                 onChanged: (_) {
@@ -275,7 +251,11 @@ class _AddPhraseModalState extends ConsumerState<AddPhraseModal> {
                             child: CircularProgressIndicator(strokeWidth: 2),
                           ),
                         )
-                      : null,
+                      : IconButton(
+                          icon: const Icon(Icons.auto_awesome, size: 20),
+                          tooltip: 'Auto-generate note',
+                          onPressed: _getDefinition,
+                        ),
                 ),
                 maxLines: 3,
                 onChanged: (_) {
