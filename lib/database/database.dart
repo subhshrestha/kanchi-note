@@ -160,9 +160,10 @@ class AppDatabase extends _$AppDatabase {
     String sourceLang = 'da',
     String targetLang = 'en',
   }) async {
+    final trimmed = sourceText.trim().toLowerCase();
     final result = await (select(translationCache)
           ..where((t) =>
-              t.sourceText.lower().equals(sourceText.toLowerCase()) &
+              t.sourceText.equals(trimmed) &
               t.sourceLang.equals(sourceLang) &
               t.targetLang.equals(targetLang)))
         .getSingleOrNull();
@@ -178,8 +179,8 @@ class AppDatabase extends _$AppDatabase {
   }) async {
     await into(translationCache).insertOnConflictUpdate(
       TranslationCacheCompanion.insert(
-        sourceText: sourceText.toLowerCase(),
-        translatedText: translatedText,
+        sourceText: sourceText.trim().toLowerCase(),
+        translatedText: translatedText.trim(),
         sourceLang: Value(sourceLang),
         targetLang: Value(targetLang),
       ),
@@ -190,8 +191,9 @@ class AppDatabase extends _$AppDatabase {
 
   // Get cached definition
   Future<String?> getCachedDefinition(String danishPhrase) async {
+    final trimmed = danishPhrase.trim().toLowerCase();
     final result = await (select(definitionCache)
-          ..where((t) => t.danishPhrase.lower().equals(danishPhrase.toLowerCase())))
+          ..where((t) => t.danishPhrase.equals(trimmed)))
         .getSingleOrNull();
     return result?.definition;
   }
@@ -200,8 +202,8 @@ class AppDatabase extends _$AppDatabase {
   Future<void> cacheDefinition(String danishPhrase, String definition) async {
     await into(definitionCache).insertOnConflictUpdate(
       DefinitionCacheCompanion.insert(
-        danishPhrase: danishPhrase.toLowerCase(),
-        definition: definition,
+        danishPhrase: danishPhrase.trim().toLowerCase(),
+        definition: definition.trim(),
       ),
     );
   }
